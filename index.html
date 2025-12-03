@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>کوئیز لغات زبان 💖</title>
+<style>
+body { font-family: 'Tahoma', sans-serif; direction: rtl; padding: 20px; margin: 0; background: linear-gradient(to bottom, #ffe6f0, #fff0f5);}
+h2 { color: #d63384; text-align: center; }
+textarea, button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 12px; border: 2px solid #d63384; font-size: 16px; box-sizing: border-box;}
+button { background-color: #ff80bf; color: white; cursor: pointer; font-weight: bold; transition: transform 0.2s, background-color 0.2s;}
+button:hover { background-color: #ff4da6; transform: scale(1.05);}
+</style>
+</head>
+<body>
+
+<h2>✨ کوئیز لغات  ✨</h2>
+<p>لغات و معنی‌ها را این‌طوری وارد کن:</p>
+<pre>
+Hi=سلام
+Doctor=دکتر
+Class=کلاس
+</pre>
+
+<textarea id="inputWords" rows="10" placeholder="لغت=معنی"></textarea>
+<button onclick="makeQuiz()">🎀 ساخت کوئیز برای دوستان 🎀</button>
+
+<script>
+function makeQuiz() {
+    const raw = document.getElementById("inputWords").value.trim().split("\n");
+    let words = [];
+    raw.forEach(line => {
+        const parts = line.split("=");
+        if(parts.length===2) words.push({word: parts[0].trim(), meaning: parts[1].trim()});
+    });
+
+    let quizHTML = '';
+    let index=0;
+    words.forEach(w => {
+        let wrong = words.filter(x=>x.meaning!==w.meaning).map(x=>x.meaning).sort(()=>0.5-Math.random()).slice(0,3);
+        let options = [w.meaning, ...wrong].sort(()=>0.5-Math.random());
+        quizHTML += `<b>${++index}. معنی "${w.word}" چیست؟</b><br>`;
+        options.forEach(op=>{ quizHTML += `- ${op}<br>`; });
+        quizHTML += '<br>';
+    });
+
+    // این قسمت فایل جداگانه quiz.html رو میسازه
+    const blob = new Blob([`<!DOCTYPE html><html lang="fa"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>کوئیز آماده  💖</title></head><body><h2>✨ کوئیز آماده  ✨</h2>${quizHTML}</body></html>`], {type: "text/html"});
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "quiz.html";
+    link.click();
+    alert("🎉 فایل quiz.html برای دوستات ساخته شد! میتونی آپلودش کنی و لینک بدی.");
+}
+</script>
+
+</body>
+</html>
